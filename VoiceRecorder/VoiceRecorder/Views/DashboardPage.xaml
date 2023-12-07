@@ -1,0 +1,22 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<pages:BaseContentPage xmlns="http://xamarin.com/schemas/2014/forms" 
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml" 
+             xmlns:d="http://xamarin.com/schemas/2014/forms/design"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:viewmodels="clr-namespace:VoiceRecorder.ViewModels"
+             xmlns:converters="clr-namespace:VoiceRecorder.Converters"
+             xmlns:pages="clr-namespace:VoiceRecorder.Views" 
+             x:TypeArguments="viewmodels:DashboardViewModel"
+             mc:Ignorable="d"
+             BackgroundColor="#F5F5F5"
+             x:Class="VoiceRecorder.Views.DashboardPage"
+             Shell.NavBarIsVisible="True">
+    <ContentPage.Resources>
+        <ResourceDictionary>
+            <converters:ColorValueConverter x:Key="colorValueConverter" />
+        </ResourceDictionary>
+    </ContentPage.Resources>
+    <ScrollView HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand"  BackgroundColor="#ffffff">
+
+    </ScrollView>
+</pages:BaseContentPage>
