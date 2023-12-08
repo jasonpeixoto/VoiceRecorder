@@ -19,14 +19,8 @@ namespace VoiceRecorder.Services
         {
         }
 
-        public Task<Stream> Load(string filename)
+        public async Task Copy(string from, string to)
         {
-            throw new NotImplementedException();
-        }
-
-        public Task Save(string filename, Stream audio)
-        {
-            throw new NotImplementedException();
         }
     }
 }

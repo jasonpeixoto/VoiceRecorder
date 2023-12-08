@@ -10,6 +10,7 @@ namespace VoiceRecorder.Services
     public class BaseService
     {
         protected IAppServices Services;
+        protected ISettings Settings => Services.Settings;
 
         public BaseService(IAppServices services)
         {

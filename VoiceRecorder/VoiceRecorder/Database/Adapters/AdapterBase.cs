@@ -16,7 +16,7 @@ namespace VoiceRecorder.Database.Adapters
         /// </summary>
         /// <param name="list"></param>
         /// <returns></returns>
-        public virtual IEnumerable<Tout> Convert(IEnumerable<Tin> list)
+        public virtual IEnumerable<Tout> Transform(IEnumerable<Tin> list)
         {
             return list.Select(tn => ConvertFrom(tn));
         }
@@ -26,7 +26,7 @@ namespace VoiceRecorder.Database.Adapters
         /// </summary>
         /// <param name="list"></param>
         /// <returns></returns>
-        public virtual IList<Tout> Convert(IList<Tin> list)
+        public virtual IList<Tout> Transform(IList<Tin> list)
         {
             return list.Select(tn => ConvertFrom(tn)).ToList();
         }

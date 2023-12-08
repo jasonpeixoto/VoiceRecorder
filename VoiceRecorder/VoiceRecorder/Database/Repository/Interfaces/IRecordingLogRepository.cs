@@ -18,12 +18,12 @@ namespace VoiceRecorder.Database.Repository.Interfaces
         // insert a model
         Task Insert(RecordingLog record);
         // update record
-        Task<bool> Update(RecordingLogTb record);
+        Task<bool> Update(RecordingLog record);
         // delete record
-        Task<bool> Delete(RecordingLogTb record);
+        Task<bool> Delete(RecordingLog record);
         // get RecordingLog by id
-        Task<RecordingLogTb> Select(string id);
+        Task<RecordingLog> Select(string id);
         // get list of logs and can pass a search predicate function
-        Task<List<RecordingLogTb>> Select(Expression<Func<RecordingLogTb, bool>> predicate = null);
+        Task<List<RecordingLog>> Select(Expression<Func<RecordingLogTb, bool>> predicate = null);
     }
 }

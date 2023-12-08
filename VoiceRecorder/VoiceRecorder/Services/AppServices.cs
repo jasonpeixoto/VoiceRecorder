@@ -3,6 +3,7 @@
 /// This code is for demo only, can not be reused without writtern permission.
 /// ---------------------------------------------------------------------------------------
 using System;
+using System.Runtime;
 using TinyIoC;
 using VoiceRecorder.Interfaces;
 
@@ -21,6 +22,7 @@ namespace VoiceRecorder.Services
                 Container.Register<INavigationService, NavigationService>().AsSingleton();
                 Container.Register<IRecordingFilesService, RecordingFilesService>().AsSingleton();
                 Container.Register<IRecorderService, RecorderService>().AsSingleton();
+                Container.Register<ISettings, Settings>().AsSingleton();
             }
             catch (Exception ex)
             {
@@ -80,6 +82,13 @@ namespace VoiceRecorder.Services
         {
             get { return _Recorder ?? (_Recorder = Container.Resolve<IRecorderService>()); }
             set { _Recorder = value; }
+        }
+
+        protected ISettings _Settings;
+        public ISettings Settings
+        {
+            get { return _Settings ?? (_Settings = Container.Resolve<ISettings>()); }
+            set { _Settings = value; }
         }
 
     }

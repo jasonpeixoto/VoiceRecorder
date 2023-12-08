@@ -3,7 +3,6 @@
 /// This code is for demo only, can not be reused without writtern permission.
 /// ---------------------------------------------------------------------------------------
 using System.Threading.Tasks;
-using VoiceRecorder.Database.Repository;
 using VoiceRecorder.Database.Repository.Interfaces;
 using VoiceRecorder.Helpers;
 using VoiceRecorder.Models;
@@ -14,13 +13,6 @@ namespace VoiceRecorder.ViewModels
     public class DashboardViewModel : BaseViewModel
     {
         private IRecordingLogRepository dbRepo;
-
-        private bool isStartRecordngEnabled;
-        public bool IsStartRecordngEnabled
-        {
-            get => isStartRecordngEnabled;
-            set => OnPropertyChanged(isStartRecordngEnabled = value);
-        }
 
         private bool isStopRecordngEnabled;
         public bool IsStopRecordngEnabled
@@ -43,7 +35,7 @@ namespace VoiceRecorder.ViewModels
             set => OnPropertyChanged(recordings = value);
         }
 
-        public Command StartRecordingCommand { get; }
+        // play 
         public Command PlayRecordingCommand { get; }
         public Command StopRecordingCommand { get; }
 
@@ -53,7 +45,6 @@ namespace VoiceRecorder.ViewModels
             dbRepo = Services.Database.RecordingLogRepo;
 
             // create our funstions for our commands
-            StartRecordingCommand = new Command(async () => await ExecuteStartRecordingCommand());
             PlayRecordingCommand = new Command(async () => await ExecutePlayRecordingCommand());
             StopRecordingCommand = new Command(async () => await ExecuteStopRecordingCommand());
 
@@ -61,14 +52,25 @@ namespace VoiceRecorder.ViewModels
             recordings = new RangeObservableCollection<RecordingLog>();
 
             // set defaults for buttons
-            IsStartRecordngEnabled = true;
             IsPlayRecordngEnabled = false;
             IsStopRecordngEnabled = false;
 
             // ok now load recordings from database into list
             LoadRecordingsFromDatabase();
 
-            Services.Recorder.StartRecording(); ;
+            Services.Recorder.RecordComplete += Recorder_RecordComplete;
+            Services.Recorder.StartRecording();
+        }
+
+        /// <summary>
+        /// when recording is complete insert record into obserable
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void Recorder_RecordComplete(object sender, RecordingLog e)
+        {
+            // push to the top of the queue
+            Recordings.Insert(0, e);
         }
 
         public override void InitlizeModel()
@@ -79,16 +81,9 @@ namespace VoiceRecorder.ViewModels
         {
             base.OnAppearing();
             IsBusy = true;
-
-
         }
 
         public void LoadRecordingsFromDatabase()
-        {
-
-        }
-
-        public async Task ExecuteStartRecordingCommand()
         {
 
         }
@@ -100,7 +95,9 @@ namespace VoiceRecorder.ViewModels
 
         public async Task ExecuteStopRecordingCommand()
         {
-
+            // get list of all records
+            var records = await dbRepo.Select();
+            Recordings.ClearAddRange(records);
         }
     }
 }

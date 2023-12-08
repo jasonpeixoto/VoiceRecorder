@@ -15,7 +15,7 @@ namespace VoiceRecorder.Database.Adapters
         /// </summary>
         /// <param name="input"></param>
         /// <returns></returns>
-        public static RecordingLog Convert(this RecordingLogTb input)
+        public static RecordingLog Transform(this RecordingLogTb input)
         {
             if (input == null) return null;
             RecordingLog recordingLog = new RecordingLog() {
@@ -32,7 +32,7 @@ namespace VoiceRecorder.Database.Adapters
         /// </summary>
         /// <param name="input"></param>
         /// <returns></returns>
-        public static RecordingLogTb Convert(this RecordingLog input)
+        public static RecordingLogTb Transform(this RecordingLog input)
         {
             if (input == null) return null;
             RecordingLogTb recordingLogTb = new RecordingLogTb() {

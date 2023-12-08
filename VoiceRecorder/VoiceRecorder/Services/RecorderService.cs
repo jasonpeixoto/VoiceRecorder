@@ -4,8 +4,9 @@
 /// ---------------------------------------------------------------------------------------
 using Plugin.AudioRecorder;
 using System;
-using System.Text;
+using System.IO;
 using System.Threading.Tasks;
+using VoiceRecorder.Database.Repository.Interfaces;
 using VoiceRecorder.Interfaces;
 using VoiceRecorder.Models;
 
@@ -14,7 +15,11 @@ namespace VoiceRecorder.Services
     public class RecorderService : BaseService, IRecorderService
     {
         private AudioRecorderService recorder;
+        private IRecordingLogRepository dbRepo;
         private AudioPlayer player;
+        private DateTime startTime;
+
+        public event EventHandler<RecordingLog> RecordComplete;
 
         public bool IsRecording => recorder.IsRecording;
         private bool isPlaying { get; set; }
@@ -32,11 +37,15 @@ namespace VoiceRecorder.Services
 
         private void Init()
         {
+            // get object o repo
+            dbRepo = Services.Database.RecordingLogRepo;
+
+            // create recorder 
             recorder = new AudioRecorderService
             {
                 StopRecordingOnSilence = true,
-                SilenceThreshold = 0.02f,
-                AudioSilenceTimeout = TimeSpan.FromSeconds(2)
+                SilenceThreshold = Settings.SilenceThreshold,
+                AudioSilenceTimeout = TimeSpan.FromSeconds(Settings.AudioSilenceTimeout)
             };
             recorder.AudioInputReceived += Recorder_AudioInputReceived;
 
@@ -55,8 +64,32 @@ namespace VoiceRecorder.Services
             // ok we need to analize the file here see if it is more than X seconds long
             if(audioFile != null)
             {
-                // ok if we meet the time frame then we can create a new database record and copy the audio file over
-                // TODO: 
+                DateTime endTime = DateTime.Now;
+                double diffInSeconds = endTime.Subtract(startTime).TotalSeconds;
+
+                if (diffInSeconds > Settings.RecordingSeconds)
+                {
+                    // ok create record and save in database
+                    RecordingLog recordComplete = new RecordingLog()
+                    {
+                        DateRecorded = DateTime.Now
+                    };
+
+                    // get location to save file
+                    string fileName = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), recordComplete.Id.ToString() + ".wav");
+
+                    // update audio file location
+                    recordComplete.AudioFile = fileName;
+
+                    // insert into the database
+                    await dbRepo.Insert(recordComplete);
+
+                    // copy file from source to dest
+                    await Services.RecordingFiles.Copy(audioFile, fileName);
+
+                    // ok notify caller use a message in future
+                    if (RecordComplete != null) RecordComplete.Invoke(this, recordComplete);
+                }
             }
             // start recording again
             await StartRecording();
@@ -80,12 +113,12 @@ namespace VoiceRecorder.Services
         {
             // first stop playing if playing
             player.Pause();
+            startTime = DateTime.Now;
 
             // if not recording then start it
             if (!IsRecording)
             {
-                var audioRecordTask = await recorder.StartRecording();
-                await audioRecordTask;
+                await recorder.StartRecording();
             }
             return true;
         }
@@ -139,8 +172,7 @@ namespace VoiceRecorder.Services
         /// <returns></returns>
         private async void Player_FinishedPlaying(object sender, EventArgs e)
         {
-            // time to start recording again
-            await StartRecording();
+            await StopPlayRecording();
         }
     }
 }

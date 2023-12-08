@@ -55,7 +55,7 @@ namespace VoiceRecorder.Database.Repository
         /// <returns></returns>
         public async Task Insert(RecordingLog recordingLog)
         {
-            RecordingLogTb recordingLogTb = recordingLog.Convert();
+            RecordingLogTb recordingLogTb = recordingLog.Transform();
             try
             {
                 if (recordingLogTb != null)
@@ -73,19 +73,19 @@ namespace VoiceRecorder.Database.Repository
         /// return null if none found, now adaptor will return null model if table is null as well.
         /// </summary>
         /// <returns></returns>
-        public async Task<RecordingLogTb> Select(string id)
+        public async Task<RecordingLog> Select(string id)
         {
-            RecordingLogTb recordingLogTb = this.Collection.FindOne(sr => sr.Id == id);
-            return await Task.FromResult<RecordingLogTb>(recordingLogTb);
+            RecordingLogTb recordingLog = this.Collection.FindOne(sr => sr.Id == id);
+            return await Task.FromResult<RecordingLog>(recordingLog.Transform());
         }
 
         /// <summary>
         /// 
         /// </summary>
         /// <returns></returns>
-        public async Task<List<RecordingLogTb>> Select(Expression<Func<RecordingLogTb, bool>> predicate = null)
+        public async Task<List<RecordingLog>> Select(Expression<Func<RecordingLogTb, bool>> predicate = null)
         {
-            List<RecordingLogTb> recordingLogTb = new List<RecordingLogTb>();
+            List<RecordingLog> recordingLog = new List<RecordingLog>();
             IEnumerable<RecordingLogTb> recordingLogTbs = (predicate != null) ?
                 this.Collection.Find(predicate) :
                 this.Collection.FindAll();
@@ -93,10 +93,10 @@ namespace VoiceRecorder.Database.Repository
             {
                 foreach (RecordingLogTb record in recordingLogTbs)
                 {
-                    recordingLogTb.Add(record);
+                    recordingLog.Add(record.Transform());
                 }
             }
-            return await Task.FromResult<List<RecordingLogTb>>(recordingLogTb);
+            return await Task.FromResult<List<RecordingLog>>(recordingLog);
         }
 
         /// <summary>
@@ -106,21 +106,10 @@ namespace VoiceRecorder.Database.Repository
         /// <returns></returns>
         public async Task<bool> Update(RecordingLog recordLog)
         {
-            RecordingLogTb recordingLogTb = recordLog.Convert();
-            return await Update(recordingLogTb);
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="recordLogTb"></param>
-        /// <returns></returns>
-        public async Task<bool> Update(RecordingLogTb recordLogTb)
-        {
             bool result = false;
-            if (recordLogTb != null)
+            if (recordLog != null)
             {
-                result = this.Collection.Update(recordLogTb);
+                result = this.Collection.Update(recordLog.Transform());
             }
             return await Task.FromResult<bool>(result);
         }
@@ -130,12 +119,12 @@ namespace VoiceRecorder.Database.Repository
         /// </summary>
         /// <param name="recordLogTb"></param>
         /// <returns></returns>
-        public async Task<bool> Delete(RecordingLogTb recordLogTb)
+        public async Task<bool> Delete(RecordingLog recordLog)
         {
             bool result = false;
-            if (recordLogTb != null)
+            if (recordLog != null)
             {
-                result = this.Collection.Delete(recordLogTb.Id);
+                result = this.Collection.Delete(recordLog.Id);
             }
             return await Task.FromResult<bool>(result);
         }

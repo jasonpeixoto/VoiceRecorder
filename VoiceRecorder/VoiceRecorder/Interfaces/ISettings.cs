@@ -2,13 +2,13 @@
 /// Author: Jason Peixoto
 /// This code is for demo only, can not be reused without writtern permission.
 /// ---------------------------------------------------------------------------------------
-using System.IO;
-using System.Threading.Tasks;
 
 namespace VoiceRecorder.Interfaces
 {
-    public interface IRecordingFilesService
+    public interface ISettings
     {
-        Task Copy(string from, string to);
+        float SilenceThreshold { get; }
+        int AudioSilenceTimeout { get;  }
+        double RecordingSeconds { get;  }
     }
 }
