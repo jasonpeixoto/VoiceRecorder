@@ -21,6 +21,7 @@ namespace VoiceRecorder.Database.Adapters
             RecordingLog recordingLog = new RecordingLog() {
                 Id = input.Id,
                 Title = input.Title,
+                AudioFile = input.AudioFile,
                 DateRecorded = input.DateRecorded,
             };
             return recordingLog;
@@ -37,6 +38,7 @@ namespace VoiceRecorder.Database.Adapters
             RecordingLogTb recordingLogTb = new RecordingLogTb() {
                 Id = input.Id,
                 Title = input.Title,
+                AudioFile = input.AudioFile,
                 DateRecorded = input.DateRecorded,
             };
             return recordingLogTb;

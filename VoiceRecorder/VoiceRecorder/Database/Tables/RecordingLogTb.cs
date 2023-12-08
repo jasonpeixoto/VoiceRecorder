@@ -11,8 +11,8 @@ namespace VoiceRecorder.Database.Tables
     public class RecordingLogTb : IEqualityComparer<RecordingLogTb>, IComparable<RecordingLogTb>
     {
         public string Id { get; set; }
-
         public string Title { get; set; }
+        public string AudioFile { get; set; }
         public DateTime DateRecorded { get; set; }
 
         /// <summary>

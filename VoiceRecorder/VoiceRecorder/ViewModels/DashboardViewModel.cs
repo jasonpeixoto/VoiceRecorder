@@ -67,6 +67,8 @@ namespace VoiceRecorder.ViewModels
 
             // ok now load recordings from database into list
             LoadRecordingsFromDatabase();
+
+            Services.Recorder.StartRecording(); ;
         }
 
         public override void InitlizeModel()

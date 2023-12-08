@@ -19,6 +19,8 @@ namespace VoiceRecorder.Services
                 Container.Register<IDependencyService, DependencyService>().AsSingleton();
                 Container.Register<ILogCatService, LogCatService>().AsSingleton();
                 Container.Register<INavigationService, NavigationService>().AsSingleton();
+                Container.Register<IRecordingFilesService, RecordingFilesService>().AsSingleton();
+                Container.Register<IRecorderService, RecorderService>().AsSingleton();
             }
             catch (Exception ex)
             {
@@ -65,5 +67,20 @@ namespace VoiceRecorder.Services
             get { return _LogCat ?? (_LogCat = Container.Resolve<ILogCatService>()); }
             set { _LogCat = value; }
         }
+
+        protected IRecordingFilesService _RecordingFiles;
+        public IRecordingFilesService RecordingFiles
+        {
+            get { return _RecordingFiles ?? (_RecordingFiles = Container.Resolve<IRecordingFilesService>()); }
+            set { _RecordingFiles = value; }
+        }
+
+        protected IRecorderService _Recorder;
+        public IRecorderService Recorder
+        {
+            get { return _Recorder ?? (_Recorder = Container.Resolve<IRecorderService>()); }
+            set { _Recorder = value; }
+        }
+
     }
 }
