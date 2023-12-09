@@ -23,6 +23,7 @@ namespace VoiceRecorder.Database.Adapters
                 Title = input.Title,
                 AudioFile = input.AudioFile,
                 DateRecorded = input.DateRecorded,
+                Duration = input.Duration
             };
             return recordingLog;
         }
@@ -40,6 +41,7 @@ namespace VoiceRecorder.Database.Adapters
                 Title = input.Title,
                 AudioFile = input.AudioFile,
                 DateRecorded = input.DateRecorded,
+                Duration = input.Duration
             };
             return recordingLogTb;
         }

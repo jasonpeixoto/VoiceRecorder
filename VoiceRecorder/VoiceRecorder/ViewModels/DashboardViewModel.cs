@@ -83,9 +83,11 @@ namespace VoiceRecorder.ViewModels
             IsBusy = true;
         }
 
-        public void LoadRecordingsFromDatabase()
+        public async Task LoadRecordingsFromDatabase()
         {
-
+            // get list of all records
+            var records = await dbRepo.Select();
+            Recordings.ClearAddRange(records);
         }
 
         public async Task ExecutePlayRecordingCommand()
@@ -95,9 +97,7 @@ namespace VoiceRecorder.ViewModels
 
         public async Task ExecuteStopRecordingCommand()
         {
-            // get list of all records
-            var records = await dbRepo.Select();
-            Recordings.ClearAddRange(records);
+            
         }
     }
 }

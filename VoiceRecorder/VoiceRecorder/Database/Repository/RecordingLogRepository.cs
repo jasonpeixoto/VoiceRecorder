@@ -5,6 +5,7 @@
 using LiteDB;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
 using VoiceRecorder.Database.Adapters;
@@ -85,18 +86,18 @@ namespace VoiceRecorder.Database.Repository
         /// <returns></returns>
         public async Task<List<RecordingLog>> Select(Expression<Func<RecordingLogTb, bool>> predicate = null)
         {
-            List<RecordingLog> recordingLog = new List<RecordingLog>();
+            List<RecordingLog> recordingLogs = new List<RecordingLog>();
             IEnumerable<RecordingLogTb> recordingLogTbs = (predicate != null) ?
                 this.Collection.Find(predicate) :
                 this.Collection.FindAll();
             if (recordingLogTbs != null)
             {
-                foreach (RecordingLogTb record in recordingLogTbs)
+                foreach (RecordingLogTb record in recordingLogTbs.OrderByDescending(t => t.DateRecorded))
                 {
-                    recordingLog.Add(record.Transform());
+                    recordingLogs.Add(record.Transform());
                 }
             }
-            return await Task.FromResult<List<RecordingLog>>(recordingLog);
+            return await Task.FromResult<List<RecordingLog>>(recordingLogs);
         }
 
         /// <summary>

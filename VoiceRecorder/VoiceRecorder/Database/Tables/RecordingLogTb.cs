@@ -14,6 +14,7 @@ namespace VoiceRecorder.Database.Tables
         public string Title { get; set; }
         public string AudioFile { get; set; }
         public DateTime DateRecorded { get; set; }
+        public double Duration { get; set; }
 
         /// <summary>
         /// 

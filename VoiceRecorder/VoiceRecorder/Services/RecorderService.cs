@@ -35,6 +35,9 @@ namespace VoiceRecorder.Services
             Init();
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         private void Init()
         {
             // get object o repo
@@ -44,6 +47,7 @@ namespace VoiceRecorder.Services
             recorder = new AudioRecorderService
             {
                 StopRecordingOnSilence = true,
+                StopRecordingAfterTimeout = false,
                 SilenceThreshold = Settings.SilenceThreshold,
                 AudioSilenceTimeout = TimeSpan.FromSeconds(Settings.AudioSilenceTimeout)
             };
@@ -62,7 +66,7 @@ namespace VoiceRecorder.Services
         private async void Recorder_AudioInputReceived(object sender, string audioFile)
         {
             // ok we need to analize the file here see if it is more than X seconds long
-            if(audioFile != null)
+            if(recorder.GetAudioFilePath() != null)
             {
                 DateTime endTime = DateTime.Now;
                 double diffInSeconds = endTime.Subtract(startTime).TotalSeconds;
@@ -72,7 +76,8 @@ namespace VoiceRecorder.Services
                     // ok create record and save in database
                     RecordingLog recordComplete = new RecordingLog()
                     {
-                        DateRecorded = DateTime.Now
+                        DateRecorded = DateTime.Now,
+                        Duration = diffInSeconds
                     };
 
                     // get location to save file
@@ -85,7 +90,7 @@ namespace VoiceRecorder.Services
                     await dbRepo.Insert(recordComplete);
 
                     // copy file from source to dest
-                    await Services.RecordingFiles.Copy(audioFile, fileName);
+                    await Services.RecordingFiles.Copy(recorder.GetAudioFilePath(), fileName);
 
                     // ok notify caller use a message in future
                     if (RecordComplete != null) RecordComplete.Invoke(this, recordComplete);
@@ -118,7 +123,12 @@ namespace VoiceRecorder.Services
             // if not recording then start it
             if (!IsRecording)
             {
-                await recorder.StartRecording();
+                // start recording on back gorund task
+                _ = Task.Run(async () =>
+                {
+                    var audioRecordTask = await recorder.StartRecording();
+                    await audioRecordTask;
+                });
             }
             return true;
         }
