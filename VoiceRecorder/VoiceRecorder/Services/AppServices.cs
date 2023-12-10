@@ -18,6 +18,7 @@ namespace VoiceRecorder.Services
                 Container.Register<ICrashReportingService, CrashReportingService>().AsSingleton();
                 Container.Register<IDatabaseService, DatabaseService>().AsSingleton();
                 Container.Register<IDependencyService, DependencyService>().AsSingleton();
+                Container.Register<IGeocodingService, GeocodingService>().AsSingleton();
                 Container.Register<ILogCatService, LogCatService>().AsSingleton();
                 Container.Register<INavigationService, NavigationService>().AsSingleton();
                 Container.Register<IRecordingFilesService, RecordingFilesService>().AsSingleton();
@@ -54,6 +55,13 @@ namespace VoiceRecorder.Services
         {
             get { return _Dependency ?? (_Dependency = Container.Resolve<IDependencyService>()); }
             set { _Dependency = value; }
+        }
+
+        protected IGeocodingService _Geocoding;
+        public IGeocodingService Geocoding
+        {
+            get { return _Geocoding ?? (_Geocoding = Container.Resolve<IGeocodingService>()); }
+            set { _Geocoding = value; }
         }
 
         protected INavigationService _Navigation;
