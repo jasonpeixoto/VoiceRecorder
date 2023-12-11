@@ -50,6 +50,7 @@ namespace VoiceRecorder.Services
                 StopRecordingOnSilence = true,
                 StopRecordingAfterTimeout = false,
                 SilenceThreshold = Settings.SilenceThreshold,
+                TotalAudioTimeout = TimeSpan.FromSeconds(Settings.TotalAudioTimeout),
                 AudioSilenceTimeout = TimeSpan.FromSeconds(Settings.AudioSilenceTimeout)
             };
             recorder.AudioInputReceived += Recorder_AudioInputReceived;
@@ -67,7 +68,7 @@ namespace VoiceRecorder.Services
         private async void Recorder_AudioInputReceived(object sender, string audioFile)
         {
             // ok we need to analize the file here see if it is more than X seconds long
-            string sourceFile = recorder.GetAudioFilePath();
+            string sourceFile = recorder.FilePath;
             if (!string.IsNullOrEmpty(sourceFile))
             {
                 DateTime endTime = DateTime.Now;
@@ -106,10 +107,10 @@ namespace VoiceRecorder.Services
                     // ok notify caller use a message in future
                     if (RecordComplete != null) RecordComplete.Invoke(this, recordComplete);
                 }
-
-                // start recording again
-                await StartRecording();
             }
+
+            // start recording again
+            await StartRecording();
         }
 
         /// <summary>

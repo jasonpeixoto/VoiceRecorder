@@ -16,9 +16,10 @@ namespace VoiceRecorder.Services
         {
         }
 
-        // defaults for now, normally I would add my enviroment archeticure here
+        // defaults for now, normally I would add my enviroment architecture here
         public float SilenceThreshold => 0.02f;                // set silince threshold here
         public int AudioSilenceTimeout => 2;                         // set for silence then stop recording
         public double RecordingSeconds => AudioSilenceTimeout + 2;        // set to silence and add X seconds
+        public int TotalAudioTimeout => 24*60*60;               // make maximum timeout to a day so it never timeouts
     }
 }

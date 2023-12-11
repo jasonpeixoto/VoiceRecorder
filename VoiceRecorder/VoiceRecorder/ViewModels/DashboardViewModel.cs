@@ -70,7 +70,11 @@ namespace VoiceRecorder.ViewModels
         private void Recorder_RecordComplete(object sender, RecordingLog e)
         {
             // push to the top of the queue
-            Recordings.Insert(0, e);
+            Device.BeginInvokeOnMainThread(() =>
+            {
+                Recordings.Insert(0, e);
+            });
+            //Recordings.SendNotifications();
         }
 
         public override void InitlizeModel()

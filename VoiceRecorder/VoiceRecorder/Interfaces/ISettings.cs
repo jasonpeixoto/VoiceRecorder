@@ -9,6 +9,7 @@ namespace VoiceRecorder.Interfaces
     {
         float SilenceThreshold { get; }
         int AudioSilenceTimeout { get;  }
+        int TotalAudioTimeout { get; }
         double RecordingSeconds { get;  }
     }
 }

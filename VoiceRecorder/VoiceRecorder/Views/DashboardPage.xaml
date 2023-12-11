@@ -17,6 +17,14 @@
         </ResourceDictionary>
     </ContentPage.Resources>
     <ScrollView HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand"  BackgroundColor="#ffffff">
-
+        <ListView x:Name="EmployeeView" ItemsSource="{Binding Recordings}" 
+                  SeparatorVisibility="Default" HasUnevenRows="false" RowHeight="50" >
+            <ListView.ItemTemplate>
+                <DataTemplate>
+                    <TextCell Text="{Binding Title}" 
+                              Detail="{Binding Duration}" />
+                </DataTemplate>
+            </ListView.ItemTemplate>
+        </ListView>
     </ScrollView>
 </pages:BaseContentPage>
